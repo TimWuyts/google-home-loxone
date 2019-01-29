@@ -13,6 +13,7 @@ export abstract class Component implements EndpointHealth {
 
   public readonly id: string;
   public readonly loxoneId: string;
+  public readonly loxoneSub: string;
   public readonly name: string;
   public readonly type: string;
   public readonly room: string;
@@ -27,6 +28,7 @@ export abstract class Component implements EndpointHealth {
     this.room = rawComponent.room;
     this.extendedOption = rawComponent.extendedOption;
     this.loxoneId = rawComponent.loxoneId || rawComponent.id;
+    this.loxoneSub = rawComponent.loxoneSub;
     this.statesEvents = statesEvents;
   }
 

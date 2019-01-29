@@ -3,6 +3,7 @@ export class ComponentRaw {
     public loxoneId?: string;
     public type: string;
     public loxoneType: string;
+    public loxoneSub?: string;
     public name: string;
     public room: string;
     public customData?: {};
