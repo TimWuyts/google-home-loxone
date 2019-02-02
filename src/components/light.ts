@@ -16,7 +16,7 @@ export class LightComponent extends Component implements OnOff, Brightness {
     constructor(rawComponent: ComponentRaw, loxoneRequest: LoxoneRequest, statesEvents: Subject<Component>) {
         super(rawComponent, loxoneRequest, statesEvents);
 
-        this.loxoneRequest.getControlInformation(this.loxoneId, this.loxoneSub).subscribe(light => {
+        this.loxoneRequest.getControlInformation(this.loxoneId).subscribe(light => {
             Object.keys(light.states).forEach((prop) => {
                 // Subscribe on each status update of the current light
                 this.loxoneRequest.watchComponent(light.states[prop]).subscribe((event) => {

@@ -83,19 +83,26 @@ export class LoxoneRequest {
         return events;
     }
 
-    getControlInformation(uuid: string, subcontrol: string = null): Observable<any> {
+    getControlInformation(uuid: string): Observable<any> {
+        const parts = uuid.split('/');
+        const subcontrol = parts[1];
+
+        uuid = parts[0];
+
         return this.getStructureFile().pipe(map(structure => {
             if (structure['controls'][uuid] === undefined) {
                 console.warn(`The component ${uuid} does not exist in Loxone`);
                 return;
             }
-            
+
             if (subcontrol) {
-                if (structure['controls'][uuid]['subControls'][subcontrol] === undefined) {
+                const subUuid = `${uuid}/${subcontrol}`;
+
+                if (structure['controls'][uuid]['subControls'][subUuid] === undefined) {
                     console.warn(`The component ${uuid} does not have a subcontrol ${subcontrol} in Loxone`);
                     return;
                 } else {
-                    return structure['controls'][uuid]['subControls'][subcontrol];
+                    return structure['controls'][uuid]['subControls'][subUuid];
                 }
             } else {
                 return structure['controls'][uuid];
