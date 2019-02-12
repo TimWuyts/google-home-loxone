@@ -1,8 +1,10 @@
-import {Observable} from 'rxjs/internal/Observable';
-import {EndpointHealthHandler} from './endpoint-health';
-import {OnOffHandler} from './on-off';
-import {TemperatureControlHandler} from './temperature-control';
+import { Observable } from 'rxjs/internal/Observable';
+
 import { BrightnessHandler } from './brightness';
+import { EndpointHealthHandler } from './endpoint-health';
+import { OnOffHandler } from './on-off';
+import { SceneHandler } from './scene';
+import { TemperatureControlHandler } from './temperature-control';
 
 /* tslint:disable no-empty-interface */
 export interface Capability {
@@ -28,6 +30,7 @@ export class Handlers {
     this.handlers = [
       OnOffHandler.INSTANCE,
       BrightnessHandler.INSTANCE,
+      SceneHandler.INSTANCE,
       EndpointHealthHandler.INSTANCE,
       TemperatureControlHandler.INSTANCE
     ];

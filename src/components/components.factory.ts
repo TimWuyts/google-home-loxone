@@ -6,6 +6,7 @@ import {CustomOnOff} from './custom-on-off';
 import {DoorComponent} from './door';
 import {JalousieComponent} from './jalousie';
 import {LightComponent} from './light';
+import {SceneComponent} from './scene';
 import {TemperatureComponent} from './temperature';
 
 export class ComponentsFactory {
@@ -18,6 +19,9 @@ export class ComponentsFactory {
         switch (rawComponent.loxoneType) {
           case 'Light':
             component = new LightComponent(rawComponent, loxoneRequest, statesEvents);
+            break;
+          case 'Scene':
+            component = new SceneComponent(rawComponent, loxoneRequest, statesEvents);
             break;
           case 'Door':
             component = new DoorComponent(rawComponent, loxoneRequest, statesEvents);
