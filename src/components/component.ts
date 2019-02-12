@@ -4,7 +4,7 @@ import {fromArray} from 'rxjs/internal/observable/fromArray';
 import {map, mergeMap, toArray} from 'rxjs/internal/operators';
 import {CapabilityHandler} from '../capabilities/capability-handler';
 import {EndpointHealth, EndpointHealthHandler} from '../capabilities/endpoint-health';
-import { ComponentRaw, ExtendedOption } from '../config';
+import {ComponentRaw, ExtendedOption} from '../config';
 import {LoxoneRequest} from '../loxone-request';
 
 
