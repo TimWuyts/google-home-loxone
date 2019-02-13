@@ -1,6 +1,6 @@
-import {Observable} from 'rxjs';
-import {of} from 'rxjs/internal/observable/of';
-import {Capability, CapabilityHandler} from './capability-handler';
+import { Observable } from 'rxjs';
+import { of } from 'rxjs/internal/observable/of';
+import { Capability, CapabilityHandler } from './capability-handler';
 
 
 export class TemperatureState {
@@ -14,7 +14,7 @@ export interface TemperatureSetting extends Capability {
 
   getThermostatModes(): string;
 
-  setTemperature(goal: Number): Observable<any>;
+  setTemperature(goal: Number): Observable<boolean>;
 }
 
 export class TemperatureSettingHandler implements CapabilityHandler<TemperatureSetting> {
@@ -42,8 +42,8 @@ export class TemperatureSettingHandler implements CapabilityHandler<TemperatureS
   }
 
   handleCommands(component: TemperatureSetting, command: string, payload?: any): Observable<boolean> {
-    if (payload['temperature']) {
-      return component.setTemperature(+payload['temperature']);
+    if (payload['thermostatTemperatureSetpoint']) {
+      return component.setTemperature(+payload['thermostatTemperatureSetpoint']);
     } else {
       console.error('Error during setting temperature', component, payload);
       of(false);

@@ -1,9 +1,11 @@
-import {Observable, of, Subject} from 'rxjs/index';
-import {CapabilityHandler} from '../capabilities/capability-handler';
-import {TemperatureSetting, TemperatureSettingHandler, TemperatureState} from '../capabilities/temperature-setting';
-import {ComponentRaw} from '../config';
-import {LoxoneRequest} from '../loxone-request';
-import {Component} from './component';
+import { Observable, of, Subject } from 'rxjs/index';
+import { map } from 'rxjs/operators';
+import { CapabilityHandler } from '../capabilities/capability-handler';
+import { TemperatureSetting, TemperatureSettingHandler, TemperatureState } from '../capabilities/temperature-setting';
+import { ComponentRaw } from '../config';
+import { ErrorType } from '../error';
+import { LoxoneRequest } from '../loxone-request';
+import { Component } from './component';
 
 export class TemperatureComponent extends Component implements TemperatureSetting {
   protected temperatureState: TemperatureState = new TemperatureState();
@@ -54,8 +56,14 @@ export class TemperatureComponent extends Component implements TemperatureSettin
     return of(this.temperatureState)
   }
 
-  setTemperature(goal): Observable<Number> {
-    // TODO: make this dynamic & prevent when a sensor is used
-    return of(goal);
+  setTemperature(target): Observable<boolean> {
+    return this.loxoneRequest.sendCmd(this.loxoneId, 'setManualTemperature/' + target).pipe(map((result) => {
+      if (result.code === '200') {
+        this.temperatureState.thermostatTemperatureSetpoint = target;
+        this.statesEvents.next(this);
+        return true;
+      }
+      throw new Error(ErrorType.ENDPOINT_UNREACHABLE)
+    }))
   }
 }
