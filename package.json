@@ -48,6 +48,6 @@
     "stop": "forever stop dist/index.js",
     "test": "jasmine-ts \"spec/**/*.spec.ts\""
   },
-  "author": "rtrompier",
+  "author": "me@timwuyts.be",
   "license": "MIT"
 }

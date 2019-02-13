@@ -9,7 +9,6 @@ import { Config } from './config';
 import { GoogleSmartHome } from './google-smart-home';
 import { LoxoneRequest } from './loxone-request';
 import { Notifier } from './notifier/notifier';
-import { Weather } from './weather/weather';
 
 const ngrok = require('ngrok');
 
@@ -21,7 +20,6 @@ class Server {
   public app: Express;
   private smartHome: GoogleSmartHome;
   private notifier: Notifier;
-  private weather: Weather;
 
   static bootstrap() {
     return new Server();
@@ -35,7 +33,6 @@ class Server {
     const components = new ComponentsFactory(config, loxoneRequest, statesEvents);
     this.smartHome = new GoogleSmartHome(config, components, new Auth0(config), statesEvents, jwtConfig);
     this.notifier = new Notifier(config);
-    this.weather = new Weather(config);
 
     this.routes();
   }
@@ -71,8 +68,6 @@ class Server {
         response.status(500).json({error: error});
       });
     });
-
-    this.weather.initWeatherRouter(router);
 
     this.app.use(router);
   }

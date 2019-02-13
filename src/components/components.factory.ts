@@ -3,7 +3,6 @@ import {Config} from '../config';
 import {LoxoneRequest} from '../loxone-request';
 import {Component} from './component';
 import {CustomOnOff} from './custom-on-off';
-import {DoorComponent} from './door';
 import {JalousieComponent} from './jalousie';
 import {LightComponent} from './light';
 import {SceneComponent} from './scene';
@@ -22,9 +21,6 @@ export class ComponentsFactory {
             break;
           case 'Scene':
             component = new SceneComponent(rawComponent, loxoneRequest, statesEvents);
-            break;
-          case 'Door':
-            component = new DoorComponent(rawComponent, loxoneRequest, statesEvents);
             break;
           case 'Temperature':
             component = new TemperatureComponent(rawComponent, loxoneRequest, statesEvents);
