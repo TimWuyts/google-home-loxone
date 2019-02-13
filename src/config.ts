@@ -8,6 +8,7 @@ export class ComponentRaw {
     public room: string;
     public customData?: {};
     public extendedOption?: ExtendedOption;
+    public modes: string;
 }
 
 export class ExtendedOption {
