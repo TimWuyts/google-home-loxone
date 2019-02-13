@@ -9,6 +9,7 @@ export class ComponentRaw {
     public customData?: {};
     public extendedOption?: ExtendedOption;
     public modes: string;
+    public target: number;
 }
 
 export class ExtendedOption {

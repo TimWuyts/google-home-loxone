@@ -31,17 +31,10 @@ export class TemperatureComponent extends Component implements TemperatureSettin
         });
       } else {
         // temperature sensor
-        let setPoint = 20; // default for temperature sensors
-
-        // specific values for temperature sensors in certain rooms
-        if (rawComponent.room === 'Badkamer') {
-          setPoint = 24;
-        }
-
         this.loxoneRequest.watchComponent(this.loxoneId).subscribe(event => {
           this.temperatureState.thermostatMode = modes;
           this.temperatureState.thermostatTemperatureAmbient = parseInt(event, 10);
-          this.temperatureState.thermostatTemperatureSetpoint = setPoint;
+          this.temperatureState.thermostatTemperatureSetpoint = rawComponent.target || 20;
         });
       }
     });
