@@ -23,16 +23,6 @@
       }
     ]
   },
-  "weather": {
-    "clientId": "APPID",
-    "clientSecret": "SECRET",
-    "username": "UserName",
-    "password": "userPass",
-    "lat_ne": "44",
-    "lon_ne": "6",
-    "lat_sw": "46",
-    "lon_sw": "6.99"
-  },
   "testMode": false,
   "log": false,
   "components": [
@@ -57,12 +47,6 @@
       "type": "THERMOSTAT",
       "loxoneType": "Temperature",
       "format": "°C"
-    },
-    {
-      "id": "0fd845c1-038a-12c9-ffffb7fe2005e936",
-      "name": "Garage",
-      "type": "SWITCH",
-      "loxoneType": "Door"
     }
   ]
 }

@@ -63,8 +63,6 @@ export class LoxoneRequest {
         }
 
         const events = new Subject<any>();
-
-        // const commandEdited = this.socket._auth.prepare_control_command(uuidAction, state);
         const commandEdited = `jdev/sps/io/${uuidAction}/${state}`;
 
         this.commandChain.push({

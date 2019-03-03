@@ -8,6 +8,8 @@ export class ComponentRaw {
     public room: string;
     public customData?: {};
     public extendedOption?: ExtendedOption;
+    public modes: string;
+    public target: number;
 }
 
 export class ExtendedOption {
@@ -30,17 +32,6 @@ export class Notifier {
     public devices: NotifierDevice[];
 }
 
-export class Weather {
-    public clientId: string;
-    public clientSecret: string;
-    public username: string;
-    public password: string;
-    public lat_ne: string;
-    public lon_ne: string;
-    public lat_sw: string;
-    public lon_sw: string;
-}
-
 export class Config {
     public loxone: LoxoneConfig;
     public components: ComponentRaw[];
@@ -51,5 +42,4 @@ export class Config {
     public agentUserId: string;
     public token: string;
     public notifier: Notifier;
-    public weather: Weather;
 }

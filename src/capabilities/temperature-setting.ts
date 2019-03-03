@@ -1,18 +1,20 @@
-import {Observable} from 'rxjs';
-import {of} from 'rxjs/internal/observable/of';
-import {Capability, CapabilityHandler} from './capability-handler';
-import {TemperatureControl} from './temperature-control';
+import { Observable } from 'rxjs';
+import { of } from 'rxjs/internal/observable/of';
+import { Capability, CapabilityHandler } from './capability-handler';
 
 
 export class TemperatureState {
   thermostatMode: string;
   thermostatTemperatureSetpoint: number;
   thermostatTemperatureAmbient: number;
-  thermostatHumidityAmbient: number;
 }
 
 export interface TemperatureSetting extends Capability {
   getTemperature(): Observable<TemperatureState>;
+
+  getThermostatModes(): string;
+
+  setTemperature(goal: Number): Observable<boolean>;
 }
 
 export class TemperatureSettingHandler implements CapabilityHandler<TemperatureSetting> {
@@ -20,9 +22,7 @@ export class TemperatureSettingHandler implements CapabilityHandler<TemperatureS
 
   getCommands(): string[] {
     return [
-      'action.devices.commands.ThermostatTemperatureSetpoint',
-      'action.devices.commands.ThermostatTemperatureSetRange',
-      'action.devices.commands.ThermostatSetMode'
+      'action.devices.commands.ThermostatTemperatureSetpoint'
     ];
   }
 
@@ -34,15 +34,19 @@ export class TemperatureSettingHandler implements CapabilityHandler<TemperatureS
     return 'action.devices.traits.TemperatureSetting';
   }
 
-  getAttributes(component: TemperatureControl): any {
+  getAttributes(component: TemperatureSetting): any {
     return {
-      'availableThermostatModes': 'auto',
+      'availableThermostatModes': component.getThermostatModes(),
       'thermostatTemperatureUnit': 'C'
     }
   }
 
   handleCommands(component: TemperatureSetting, command: string, payload?: any): Observable<boolean> {
-    console.log('No TemperatureComponent control handle');
-    return of(true);
+    if (payload['thermostatTemperatureSetpoint']) {
+      return component.setTemperature(+payload['thermostatTemperatureSetpoint']);
+    } else {
+      console.error('Error during setting temperature', component, payload);
+      of(false);
+    }
   }
 }

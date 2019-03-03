@@ -3,7 +3,9 @@ import {BrightnessHandler} from './brightness';
 import {EndpointHealthHandler} from './endpoint-health';
 import {FanSpeedHandler} from './fan-speed';
 import {OnOffHandler} from './on-off';
-import {TemperatureControlHandler} from './temperature-control';
+import { SceneHandler } from './scene';
+import { TemperatureSettingHandler } from './temperature-setting';
+
 
 /* tslint:disable no-empty-interface */
 export interface Capability {
@@ -30,8 +32,9 @@ export class Handlers {
       FanSpeedHandler.INSTANCE,
       OnOffHandler.INSTANCE,
       BrightnessHandler.INSTANCE,
+      SceneHandler.INSTANCE,
       EndpointHealthHandler.INSTANCE,
-      TemperatureControlHandler.INSTANCE
+      TemperatureSettingHandler.INSTANCE
     ];
 
     this.handlers.forEach(handler => {

@@ -18,6 +18,8 @@ export abstract class Component implements EndpointHealth {
   public readonly type: string;
   public readonly room: string;
   public readonly extendedOption: ExtendedOption;
+  public readonly modes: string;
+  public readonly target: number;
   protected readonly statesEvents: Subject<Component>;
 
   protected constructor(rawComponent: ComponentRaw, loxoneRequest: LoxoneRequest, statesEvents: Subject<Component>) {
@@ -27,6 +29,8 @@ export abstract class Component implements EndpointHealth {
     this.type = rawComponent.type;
     this.room = rawComponent.room;
     this.extendedOption = rawComponent.extendedOption;
+    this.modes = rawComponent.modes;
+    this.target = rawComponent.target;
     this.loxoneId = rawComponent.loxoneId || rawComponent.id;
     this.loxoneSub = rawComponent.loxoneSub;
     this.statesEvents = statesEvents;
