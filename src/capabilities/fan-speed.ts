@@ -8,6 +8,8 @@ export interface FanSpeed extends Capability {
   reset(): Observable<boolean>;
 
   getPowerState(): Observable<boolean>;
+
+  getSelectedOption(): Observable<number>;
 }
 
 export class FanSpeedHandler implements CapabilityHandler<FanSpeed> {
@@ -28,45 +30,53 @@ export class FanSpeedHandler implements CapabilityHandler<FanSpeed> {
           {
             'speed_name': 'S1',
             'speed_values': [{
-              'speed_synonym': ['laag', 'minimum', 'snelheid 1', 'stand 1'],
+              'speed_synonym': ['stand 1', 'laag', 'minimum', 'snelheid 1'],
               'lang': 'nl'
             }]
           },
           {
             'speed_name': 'S2',
             'speed_values': [{
-              'speed_synonym': ['gemiddeld', 'normaal', 'snelheid 2', 'stand 2'],
+              'speed_synonym': ['stand 2', 'gemiddeld', 'normaal', 'snelheid 2'],
               'lang': 'nl'
             }]
           },
           {
             'speed_name': 'S3',
             'speed_values': [{
-              'speed_synonym': ['hoog', 'maximum', 'snelheid 3', 'stand 3'],
+              'speed_synonym': ['stand 3', 'hoog', 'maximum', 'snelheid 3'],
               'lang': 'nl'
             }]
           }
         ],
         'ordered': true
       },
-      'reversible': false
+      'reversible': true
     }
   }
 
   getState(component: FanSpeed): Observable<any> {
-    return component.getPowerState().pipe(map(result => {
-      console.log('state S1');
+    return component.getSelectedOption().pipe(map(val => {
       return {
-        currentFanSpeedSetting: 'S1'
+        currentFanSpeedSetting: val
       }
     }));
   }
 
   handleCommands(component: FanSpeed, command: string, payload?: any): Observable<boolean> {
-    if (payload['on']) {
-      return component.selectOption(1);
-    } else {
+    let option;
+
+    switch (payload['fanSpeed']) {
+      case 'S1': option = 0; break;
+      case 'S2': option = 1; break;
+      case 'S3': option = 2; break;
+      default: option = 0;
+    }
+
+    if (option === 0) {
       return component.reset();
+    } else {
+      return component.selectOption(option);
     }
   }
 }

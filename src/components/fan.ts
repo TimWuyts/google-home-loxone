@@ -3,11 +3,12 @@ import {map} from 'rxjs/internal/operators';
 import {CapabilityHandler} from '../capabilities/capability-handler';
 import {EndpointHealthHandler} from '../capabilities/endpoint-health';
 import {FanSpeed, FanSpeedHandler} from '../capabilities/fan-speed';
+import {OnOff, OnOffHandler} from '../capabilities/on-off';
 import {ComponentRaw} from '../config';
 import {LoxoneRequest} from '../loxone-request';
 import {Component} from './component';
 
-export class FanComponent extends Component implements FanSpeed {
+export class FanComponent extends Component implements OnOff, FanSpeed {
   protected output: number;
 
   constructor(rawComponent: ComponentRaw, loxoneRequest: LoxoneRequest, statesEvents: Subject<Component>) {
@@ -22,16 +23,24 @@ export class FanComponent extends Component implements FanSpeed {
 
   getCapabilities(): CapabilityHandler<any>[] {
     return [
+      OnOffHandler.INSTANCE,
       FanSpeedHandler.INSTANCE,
       EndpointHealthHandler.INSTANCE,
     ];
   }
 
+  turnOn(): Observable<boolean> {
+    return this.selectOption(1);
+  }
+
+  turnOff(): Observable<boolean> {
+    return this.reset();
+  }
+
   selectOption(option: number): Observable<boolean> {
-    // TODO: make option dynamic
     return this.loxoneRequest.sendCmd(this.loxoneId, option.toString()).pipe(map(result => {
       if (result.code === '200') {
-        this.output = 1;
+        this.output = option;
         return true;
       }
     }));
@@ -46,7 +55,11 @@ export class FanComponent extends Component implements FanSpeed {
     }));
   }
 
+  getSelectedOption(): Observable<number> {
+    return of(this.output);
+  }
+
   getPowerState(): Observable<boolean> {
-    return of(this.output > 0)
+    return of(this.output > 0);
   }
 }
