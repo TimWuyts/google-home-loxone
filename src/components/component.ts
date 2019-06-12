@@ -15,6 +15,7 @@ export abstract class Component implements EndpointHealth {
   public readonly loxoneId: string;
   public readonly loxoneSub: string;
   public readonly name: string;
+  public readonly nicknames: string[];
   public readonly type: string;
   public readonly room: string;
   public readonly extendedOption: ExtendedOption;
@@ -26,6 +27,7 @@ export abstract class Component implements EndpointHealth {
     this.loxoneRequest = loxoneRequest;
     this.id = rawComponent.id;
     this.name = rawComponent.name;
+    this.nicknames = rawComponent.nicknames || [rawComponent.name];
     this.type = rawComponent.type;
     this.room = rawComponent.room;
     this.extendedOption = rawComponent.extendedOption;
@@ -72,7 +74,7 @@ export abstract class Component implements EndpointHealth {
       'name': {
         'name': this.name,
         'defaultNames': [this.name],
-        'nicknames': [this.name]
+        'nicknames': this.nicknames
       },
       'roomHint': this.room,
       'willReportState': true,

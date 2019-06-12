@@ -5,6 +5,7 @@ export class ComponentRaw {
     public loxoneType: string;
     public loxoneSub?: string;
     public name: string;
+    public nicknames: string[];
     public room: string;
     public customData?: {};
     public extendedOption?: ExtendedOption;
