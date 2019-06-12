@@ -2,12 +2,13 @@ import {Observable, of, Subject} from 'rxjs/index';
 import {map} from 'rxjs/internal/operators';
 import {CapabilityHandler} from '../capabilities/capability-handler';
 import {EndpointHealthHandler} from '../capabilities/endpoint-health';
-import {OnOff, OnOffHandler} from '../capabilities/on-off';
+import {OpenClose, OpenCloseHandler} from '../capabilities/open-close';
 import {ComponentRaw} from '../config';
+import {ErrorType} from '../error';
 import {LoxoneRequest} from '../loxone-request';
 import {Component} from './component';
 
-export class JalousieComponent extends Component implements OnOff {
+export class JalousieComponent extends Component implements OpenClose {
   protected statePos: number;
   protected stateUp: boolean;
   protected stateDown: boolean;
@@ -17,63 +18,56 @@ export class JalousieComponent extends Component implements OnOff {
 
     this.loxoneRequest.getControlInformation(this.loxoneId).subscribe(jalousie => {
       this.loxoneRequest.watchComponent(jalousie['states']['position']).subscribe(event => {
-        this.statePos = event;
+        this.statePos = (1 - event) * 100;
+        this.statesEvents.next(this);
       });
 
       this.loxoneRequest.watchComponent(jalousie['states']['up']).subscribe(event => {
         this.stateUp = event;
+        this.statesEvents.next(this);
       });
 
       this.loxoneRequest.watchComponent(jalousie['states']['down']).subscribe(event => {
         this.stateDown = event;
+        this.statesEvents.next(this);
       });
     });
   }
 
   getCapabilities(): CapabilityHandler<any>[] {
     return [
-      OnOffHandler.INSTANCE,
+      OpenCloseHandler.INSTANCE,
       EndpointHealthHandler.INSTANCE,
     ];
   }
 
-  turnOn(): Observable<boolean> {
-    if (this.stateUp || this.stateDown) {
-      return this.stop();
-    }
-
-    return this.loxoneRequest.sendCmd(this.loxoneId, 'up').pipe(map(result => {
+  open(): Observable<boolean> {
+    return this.loxoneRequest.sendCmd(this.loxoneId, 'FullUp').pipe(map(result => {
       if (result.code === '200') {
         this.stateUp = true;
-        return true;
-      }
-    }));
-  }
-
-  turnOff(): Observable<boolean> {
-    if (this.stateUp || this.stateDown) {
-      return this.stop();
-    }
-
-    return this.loxoneRequest.sendCmd(this.loxoneId, 'down').pipe(map(result => {
-      if (result.code === '200') {
-        this.stateDown = true;
-        return true;
-      }
-    }));
-  }
-
-  getPowerState(): Observable<boolean> {
-    return of(this.statePos > 0)
-  }
-
-  protected stop(): Observable<boolean> {
-    return this.loxoneRequest.sendCmd(this.loxoneId, 'stop').pipe(map(result => {
-      if (result.code === '200') {
         this.stateDown = false;
-        this.stateUp = false;
+        this.statesEvents.next(this);
         return true;
       }
-    }))
+
+      throw new Error(ErrorType.ENDPOINT_UNREACHABLE)
+    }));
+  }
+
+  close(): Observable<boolean> {
+    return this.loxoneRequest.sendCmd(this.loxoneId, 'FullDown').pipe(map(result => {
+      if (result.code === '200') {
+        this.stateUp = false;
+        this.stateDown = true;
+        this.statesEvents.next(this);
+        return true;
+      }
+
+      throw new Error(ErrorType.ENDPOINT_UNREACHABLE);
+    }));
+  }
+
+  getState(): Observable<number> {
+    return of(this.statePos);
   }
 }

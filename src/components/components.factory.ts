@@ -1,6 +1,8 @@
 import {Subject} from 'rxjs/internal/Subject';
 import {Config} from '../config';
 import {LoxoneRequest} from '../loxone-request';
+
+import {AlarmComponent} from './alarm';
 import {Component} from './component';
 import {CustomOnOff} from './custom-on-off';
 import {FanComponent} from './fan';
@@ -31,6 +33,9 @@ export class ComponentsFactory {
             break;
           case 'Fan':
             component = new FanComponent(rawComponent, loxoneRequest, statesEvents);
+            break;
+          case 'Alarm':
+            component = new AlarmComponent(rawComponent, loxoneRequest, statesEvents);
             break;
           case 'Custom-OnOff':
             component = new CustomOnOff(rawComponent, loxoneRequest, statesEvents)
