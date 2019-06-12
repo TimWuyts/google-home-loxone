@@ -1,10 +1,12 @@
 import {Observable} from 'rxjs/internal/Observable';
+import {ArmDisarmHandler} from './arm-disarm';
 import {BrightnessHandler} from './brightness';
 import {EndpointHealthHandler} from './endpoint-health';
 import {FanSpeedHandler} from './fan-speed';
 import {OnOffHandler} from './on-off';
-import { SceneHandler } from './scene';
-import { TemperatureSettingHandler } from './temperature-setting';
+import {OpenCloseHandler} from './open-close';
+import {SceneHandler} from './scene';
+import {TemperatureSettingHandler} from './temperature-setting';
 
 
 /* tslint:disable no-empty-interface */
@@ -31,6 +33,8 @@ export class Handlers {
     this.handlers = [
       FanSpeedHandler.INSTANCE,
       OnOffHandler.INSTANCE,
+      OpenCloseHandler.INSTANCE,
+      ArmDisarmHandler.INSTANCE,
       BrightnessHandler.INSTANCE,
       SceneHandler.INSTANCE,
       EndpointHealthHandler.INSTANCE,
