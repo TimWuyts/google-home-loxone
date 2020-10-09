@@ -44,7 +44,6 @@ export class AlarmComponent extends Component implements ArmDisarm {
 
   turnOff(): Observable<boolean> {
     return this.loxoneRequest.sendCmd(this.loxoneId, 'off').pipe(map(result => {
-      console.log(result);
       if (result.code === '200') {
         this.armed = false;
         this.statesEvents.next(this);
