@@ -9,7 +9,7 @@ import {FanComponent} from './fan';
 import {JalousieComponent} from './jalousie';
 import {LightComponent} from './light';
 import {SceneComponent} from './scene';
-import {TemperatureComponent} from './temperature';
+import {ThermostatComponent} from './thermostat';
 
 export class ComponentsFactory {
   private readonly components: { [key: string]: Component } = {};
@@ -25,8 +25,8 @@ export class ComponentsFactory {
           case 'Scene':
             component = new SceneComponent(rawComponent, loxoneRequest, statesEvents);
             break;
-          case 'Temperature':
-            component = new TemperatureComponent(rawComponent, loxoneRequest, statesEvents);
+          case 'Thermostat':
+            component = new ThermostatComponent(rawComponent, loxoneRequest, statesEvents);
             break;
           case 'Jalousie':
             component = new JalousieComponent(rawComponent, loxoneRequest, statesEvents);
