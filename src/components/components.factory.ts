@@ -9,6 +9,7 @@ import {FanComponent} from './fan';
 import {JalousieComponent} from './jalousie';
 import {LightComponent} from './light';
 import {SceneComponent} from './scene';
+import {SensorComponent} from './sensor';
 import {ThermostatComponent} from './thermostat';
 
 export class ComponentsFactory {
@@ -27,6 +28,9 @@ export class ComponentsFactory {
             break;
           case 'Thermostat':
             component = new ThermostatComponent(rawComponent, loxoneRequest, statesEvents);
+            break;
+          case 'Sensor':
+            component = new SensorComponent(rawComponent, loxoneRequest, statesEvents);
             break;
           case 'Jalousie':
             component = new JalousieComponent(rawComponent, loxoneRequest, statesEvents);
