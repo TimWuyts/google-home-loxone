@@ -3,12 +3,11 @@ import {map} from 'rxjs/internal/operators';
 import {CapabilityHandler} from '../capabilities/capability-handler';
 import {EndpointHealthHandler} from '../capabilities/endpoint-health';
 import {FanSpeed, FanSpeedHandler} from '../capabilities/fan-speed';
-import {OnOff, OnOffHandler} from '../capabilities/on-off';
 import {ComponentRaw} from '../config';
 import {LoxoneRequest} from '../loxone-request';
 import {Component} from './component';
 
-export class FanComponent extends Component implements OnOff, FanSpeed {
+export class FanComponent extends Component implements FanSpeed {
   protected output: number;
 
   constructor(rawComponent: ComponentRaw, loxoneRequest: LoxoneRequest, statesEvents: Subject<Component>) {
@@ -23,18 +22,9 @@ export class FanComponent extends Component implements OnOff, FanSpeed {
 
   getCapabilities(): CapabilityHandler<any>[] {
     return [
-      OnOffHandler.INSTANCE,
       FanSpeedHandler.INSTANCE,
-      EndpointHealthHandler.INSTANCE,
+      EndpointHealthHandler.INSTANCE
     ];
-  }
-
-  turnOn(): Observable<boolean> {
-    return this.selectOption(1);
-  }
-
-  turnOff(): Observable<boolean> {
-    return this.reset();
   }
 
   selectOption(option: number): Observable<boolean> {
