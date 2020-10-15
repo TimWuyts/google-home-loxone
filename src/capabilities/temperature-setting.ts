@@ -46,7 +46,7 @@ export class TemperatureSettingHandler implements CapabilityHandler<TemperatureS
       return component.setTemperature(+payload['thermostatTemperatureSetpoint']);
     } else {
       console.error('Error during setting temperature', component, payload);
-      of(false);
+      return of(false);
     }
   }
 }

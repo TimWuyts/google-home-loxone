@@ -39,7 +39,7 @@ export class BrightnessHandler implements CapabilityHandler<Brightness> {
       return component.setBrightness(+payload['brightness']);
     } else {
       console.error('Error during setting brightness', component, payload);
-      of(false);
+      return of(false);
     }
   }
 }
