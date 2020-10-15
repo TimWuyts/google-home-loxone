@@ -5,12 +5,14 @@ import {LoxoneRequest} from '../loxone-request';
 import {AlarmComponent} from './alarm';
 import {Component} from './component';
 import {CustomOnOff} from './custom-on-off';
+import {DoorComponent} from './door';
 import {FanComponent} from './fan';
 import {JalousieComponent} from './jalousie';
 import {LightComponent} from './light';
 import {SceneComponent} from './scene';
 import {SensorComponent} from './sensor';
 import {ThermostatComponent} from './thermostat';
+import {WindowComponent} from './window';
 
 export class ComponentsFactory {
   private readonly components: { [key: string]: Component } = {};
@@ -40,6 +42,12 @@ export class ComponentsFactory {
             break;
           case 'Alarm':
             component = new AlarmComponent(rawComponent, loxoneRequest, statesEvents);
+            break;
+          case 'Door':
+            component = new DoorComponent(rawComponent, loxoneRequest, statesEvents);
+            break;
+          case 'Window':
+            component = new WindowComponent(rawComponent, loxoneRequest, statesEvents);
             break;
           case 'Custom-OnOff':
             component = new CustomOnOff(rawComponent, loxoneRequest, statesEvents)

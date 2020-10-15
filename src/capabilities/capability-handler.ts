@@ -5,7 +5,9 @@ import {EndpointHealthHandler} from './endpoint-health';
 import {FanSpeedHandler} from './fan-speed';
 import {OnOffHandler} from './on-off';
 import {OpenCloseHandler} from './open-close';
+import {OpenCloseStateHandler} from './open-close-state';
 import {SceneHandler} from './scene';
+import {TemperatureControlHandler} from './temperature-control';
 import {TemperatureSettingHandler} from './temperature-setting';
 
 
@@ -34,10 +36,12 @@ export class Handlers {
       FanSpeedHandler.INSTANCE,
       OnOffHandler.INSTANCE,
       OpenCloseHandler.INSTANCE,
+      OpenCloseStateHandler.INSTANCE,
       ArmDisarmHandler.INSTANCE,
       BrightnessHandler.INSTANCE,
       SceneHandler.INSTANCE,
       EndpointHealthHandler.INSTANCE,
+      TemperatureControlHandler.INSTANCE,
       TemperatureSettingHandler.INSTANCE
     ];
 
