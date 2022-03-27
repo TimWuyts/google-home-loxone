@@ -10,8 +10,6 @@ import { GoogleSmartHome } from './google-smart-home';
 import { LoxoneRequest } from './loxone-request';
 import { Notifier } from './notifier/notifier';
 
-const ngrok = require('ngrok');
-
 // Serve the application at the given port
 const config = require('../config.json') as Config;
 const jwtConfig = require('../jwt.json');
@@ -74,9 +72,15 @@ class Server {
 }
 
 const server = Server.bootstrap().app.listen(3000, () => {
-  const host = server.address().address;
-  const port = server.address().port;
+  const address = server.address();
 
-  console.log('Smart Home Cloud and App listening at %s:%s', host, port);
+  if (typeof address !== 'string') {
+    const host = address.address;
+    const port = address.port;
+
+    console.log('Smart Home Cloud and App listening at %s:%s', host, port);
+  } else {
+    console.log('Smart Home Cloud and App listening at %s', address);
+  }
 });
 

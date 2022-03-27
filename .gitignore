@@ -13,5 +13,3 @@ config.json
 action.json
 creds.data
 gactions.dms
-
-!spec/support/jwt.json
