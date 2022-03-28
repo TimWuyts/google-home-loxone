@@ -1,4 +1,4 @@
-import { smarthome, SmartHomeApp } from 'actions-on-google';
+import { google } from 'googleapis';
 import {
     SmartHomeV1ExecuteErrors,
     SmartHomeV1ExecuteRequestCommands,
@@ -9,10 +9,10 @@ import {
     SmartHomeV1QueryRequestPayload,
     SmartHomeV1QueryResponse,
     SmartHomeV1SyncResponse
-} from 'actions-on-google/dist/service/smarthome/api/v1';
+} from './smarthome/api.model';
 import { Request } from 'express-serve-static-core';
 import { from, interval, Observable, of } from 'rxjs';
-import { buffer, catchError, filter, flatMap, map, mergeMap, toArray } from 'rxjs/operators';
+import { buffer, catchError, filter, map, mergeMap, tap, toArray } from 'rxjs/operators';
 import { Auth0 } from './auth';
 import { Handlers } from './capabilities/capability-handler';
 import { Component } from './components/component';
@@ -23,38 +23,47 @@ const uuid = require('uuid');
 
 export class GoogleSmartHome {
     private readonly config: Config;
+    private readonly jwtConfig: string;
+    private readonly jwtPath: string;
     private readonly auth: Auth0;
     private readonly components: ComponentsFactory;
+    private readonly statesEvents: Observable<Component>;
     private readonly handlers: Handlers;
-    private readonly smarthomeApp: SmartHomeApp;
 
-    constructor(config: Config, components: ComponentsFactory, auth: Auth0,
-        statesEvents: Observable<Component>, jwtConfig: any) {
+    constructor(config: Config, components: ComponentsFactory, auth: Auth0, statesEvents: Observable<Component>, jwtConfig: string, jwtPath: string) {
 
         this.config = config;
+        this.jwtConfig = jwtConfig;
+        this.jwtPath = jwtPath;
         this.auth = auth;
         this.handlers = new Handlers();
         this.components = components;
-
-        this.smarthomeApp = smarthome({
-            jwt: jwtConfig,
-            key: this.config.token
-        });
-
-        this.smarthomeApp.requestSync(this.config.agentUserId)
-            .then(result => console.log('Sync OK', result))
-            .catch(error => console.log('Sync NOK', error));
-
-        this.subscribeStates(statesEvents);
+        this.statesEvents = statesEvents;
     }
 
-    subscribeStates(statesEvents: Observable<Component>): void {
-        statesEvents.pipe(
+    async init() {
+        // Init Homegraph API
+        const auth = new google.auth.GoogleAuth({ keyFile: this.jwtPath, scopes: ['https://www.googleapis.com/auth/homegraph'] });
+        const client = await auth.getClient();
+        const homegraph = google.homegraph({ version: 'v1', auth: client });
+
+        if (!this.config.testMode) {
+            await homegraph.devices.requestSync({ requestBody: { agentUserId: this.config.agentUserId, async: false } });
+        }
+
+        // Listening for loxone devices events
+        this.subscribeStates(this.statesEvents).subscribe({
+            next: (states) => homegraph.devices.reportStateAndNotification({ requestBody: states })
+        });
+    }
+
+    subscribeStates(statesEvents: Observable<Component>): Observable<any> {
+        return statesEvents.pipe(
             buffer(interval(1000)),
             filter(componentsStates => componentsStates.length > 0),
             mergeMap(componentsStates => {
                 return from(componentsStates).pipe(
-                    flatMap(component => component.getStates().pipe(map(state => {
+                    mergeMap(component => component.getStates().pipe(map(state => {
                         const response = {};
                         response[component.id] = state;
                         return response
@@ -76,19 +85,14 @@ export class GoogleSmartHome {
                         }
                     }))
             })
-        ).subscribe(state => {
-            console.log(JSON.stringify(state));
-            this.smarthomeApp.reportState(state)
-                .then(result => console.log('State OK', result))
-                .catch(err => console.log('State NOK', err))
-        })
+        );
     }
 
     handler(data: any, request: Request): Observable<any> {
         const authToken = this.auth.checkToken(request);
 
         return authToken.pipe(
-            flatMap(registered => {
+            mergeMap(registered => {
                 if (!registered) {
                     return of({
                         errorCode: 'authFailure'
@@ -231,11 +235,10 @@ export class GoogleSmartHome {
                         return componentHandler.handleCommands(component, execution.command, execution.params);
                     }),
                     catchError((err) => {
-                        // TODO Make this better
                         console.error('ERROR', err);
                         return of(false);
                     }),
-                    flatMap((succeed: boolean) => {
+                    mergeMap((succeed: boolean) => {
                         // Can't find the handler, return not supported
                         if (!succeed) {
                             return of({

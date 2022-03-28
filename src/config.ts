@@ -34,6 +34,7 @@ export class Notifier {
 }
 
 export class Config {
+    public serverPort: string;
     public loxone: LoxoneConfig;
     public components: ComponentRaw[];
     public authorizedEmails: string[];
@@ -41,6 +42,5 @@ export class Config {
     public log: boolean;
     public testMode: boolean;
     public agentUserId: string;
-    public token: string;
     public notifier: Notifier;
 }
