@@ -48,7 +48,8 @@ export class GoogleSmartHome {
         const homegraph = google.homegraph({ version: 'v1', auth: client });
 
         if (!this.config.testMode) {
-            await homegraph.devices.requestSync({ requestBody: { agentUserId: this.config.agentUserId, async: false } });
+            // TODO: confirm if sync is actually working due to "Request contains an invalid argument." error (or bug?)
+            await homegraph.devices.requestSync({ requestBody: { agentUserId: this.config.agentUserId, async: true } });
         }
 
         // Listening for loxone devices events
