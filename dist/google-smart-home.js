@@ -64,8 +64,10 @@ var GoogleSmartHome = /** @class */ (function () {
                         client = _a.sent();
                         homegraph = googleapis_1.google.homegraph({ version: 'v1', auth: client });
                         if (!!this.config.testMode) return [3 /*break*/, 3];
-                        return [4 /*yield*/, homegraph.devices.requestSync({ requestBody: { agentUserId: this.config.agentUserId, async: false } })];
+                        // TODO: confirm if sync is actually working due to "Request contains an invalid argument." error (or bug?)
+                        return [4 /*yield*/, homegraph.devices.requestSync({ requestBody: { agentUserId: this.config.agentUserId, async: true } })];
                     case 2:
+                        // TODO: confirm if sync is actually working due to "Request contains an invalid argument." error (or bug?)
                         _a.sent();
                         _a.label = 3;
                     case 3:
