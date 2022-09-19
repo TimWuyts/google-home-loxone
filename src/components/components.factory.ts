@@ -25,9 +25,6 @@ export class ComponentsFactory {
           case 'Light':
             component = new LightComponent(rawComponent, loxoneRequest, statesEvents);
             break;
-          case 'Scene':
-            component = new SceneComponent(rawComponent, loxoneRequest, statesEvents);
-            break;
           case 'Thermostat':
             component = new ThermostatComponent(rawComponent, loxoneRequest, statesEvents);
             break;
@@ -35,6 +32,7 @@ export class ComponentsFactory {
             component = new SensorComponent(rawComponent, loxoneRequest, statesEvents);
             break;
           case 'Jalousie':
+          case 'CentralJalousie':
             component = new JalousieComponent(rawComponent, loxoneRequest, statesEvents);
             break;
           case 'Fan':
@@ -47,10 +45,15 @@ export class ComponentsFactory {
             component = new DoorComponent(rawComponent, loxoneRequest, statesEvents);
             break;
           case 'Window':
+          case 'CentralWindow':
             component = new WindowComponent(rawComponent, loxoneRequest, statesEvents);
             break;
           case 'Custom-OnOff':
             component = new CustomOnOff(rawComponent, loxoneRequest, statesEvents)
+            break;
+          case 'Scene':
+            component = new SceneComponent(rawComponent, loxoneRequest, statesEvents);
+            break;
         }
 
         if (component != null) {

@@ -77,7 +77,7 @@ export class WindowComponent extends Component implements OpenCloseState {
     }
 
     position(percentage: number): Observable<boolean> {
-        return this.loxoneRequest.sendCmd(this.loxoneId, 'moveToPosition').pipe(map(result => {
+        return this.loxoneRequest.sendCmd(this.loxoneId, 'moveToPosition/' + percentage).pipe(map(result => {
             if (result.code === '200') {
                 this.statePos = percentage;
                 this.stateOpened = false;
