@@ -67,6 +67,20 @@ export class JalousieComponent extends Component implements OpenClose {
     }));
   }
 
+  position(percentage: number): Observable<boolean> {
+    return this.loxoneRequest.sendCmd(this.loxoneId, 'manualPosition/' + percentage).pipe(map(result => {
+        if (result.code === '200') {
+            this.statePos = percentage;
+            this.stateUp = false;
+            this.stateDown = false;
+            this.statesEvents.next(this);
+            return true;
+        }
+
+        throw new Error(ErrorType.ENDPOINT_UNREACHABLE);
+    }));
+}
+
   getState(): Observable<number> {
     return of(this.statePos);
   }

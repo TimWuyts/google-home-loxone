@@ -7,6 +7,8 @@ export interface OpenClose extends Capability {
 
     close(): Observable<boolean>;
 
+    position(percentage): Observable<boolean>;
+
     getState(): Observable<number>;
 }
 
@@ -34,10 +36,10 @@ export class OpenCloseHandler implements CapabilityHandler<OpenClose> {
     }
 
     handleCommands(component: OpenClose, command: string, payload?: any): Observable<boolean> {
-        if (payload['openPercent'] === 100) {
-            return component.open();
-        } else {
-            return component.close();
+        switch (payload['openPercent']) {
+            case 100: return component.open();
+            case 0: return component.close();
+            default: return component.position(payload['openPercent']);
         }
     }
 }

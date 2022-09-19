@@ -14,7 +14,8 @@ export class ComponentRaw {
 }
 
 export class ExtendedOption {
-    public brightness: boolean;
+    public brightness?: boolean;
+    public motorised?: boolean;
 }
 
 export class LoxoneConfig {
