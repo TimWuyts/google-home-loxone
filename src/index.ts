@@ -10,7 +10,7 @@ const argv = yargs.options({
     port: {
         alias: 'p',
         type: 'number',
-        default: 3000,
+        default: 3001,
         description: 'Http server port'
     },
     jwt: {

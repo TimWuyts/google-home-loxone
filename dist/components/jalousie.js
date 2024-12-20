@@ -72,6 +72,19 @@ var JalousieComponent = /** @class */ (function (_super) {
             throw new Error(error_1.ErrorType.ENDPOINT_UNREACHABLE);
         }));
     };
+    JalousieComponent.prototype.position = function (percentage) {
+        var _this = this;
+        return this.loxoneRequest.sendCmd(this.loxoneId, 'manualPosition/' + (100 - percentage)).pipe((0, operators_1.map)(function (result) {
+            if (result.code === '200') {
+                _this.statePos = percentage;
+                _this.stateUp = false;
+                _this.stateDown = false;
+                _this.statesEvents.next(_this);
+                return true;
+            }
+            throw new Error(error_1.ErrorType.ENDPOINT_UNREACHABLE);
+        }));
+    };
     JalousieComponent.prototype.getState = function () {
         return (0, index_1.of)(this.statePos);
     };

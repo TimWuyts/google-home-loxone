@@ -22,9 +22,6 @@ var ComponentsFactory = /** @class */ (function () {
                 case 'Light':
                     component = new light_1.LightComponent(rawComponent, loxoneRequest, statesEvents);
                     break;
-                case 'Scene':
-                    component = new scene_1.SceneComponent(rawComponent, loxoneRequest, statesEvents);
-                    break;
                 case 'Thermostat':
                     component = new thermostat_1.ThermostatComponent(rawComponent, loxoneRequest, statesEvents);
                     break;
@@ -32,6 +29,7 @@ var ComponentsFactory = /** @class */ (function () {
                     component = new sensor_1.SensorComponent(rawComponent, loxoneRequest, statesEvents);
                     break;
                 case 'Jalousie':
+                case 'CentralJalousie':
                     component = new jalousie_1.JalousieComponent(rawComponent, loxoneRequest, statesEvents);
                     break;
                 case 'Fan':
@@ -44,10 +42,15 @@ var ComponentsFactory = /** @class */ (function () {
                     component = new door_1.DoorComponent(rawComponent, loxoneRequest, statesEvents);
                     break;
                 case 'Window':
+                case 'CentralWindow':
                     component = new window_1.WindowComponent(rawComponent, loxoneRequest, statesEvents);
                     break;
                 case 'Custom-OnOff':
                     component = new custom_on_off_1.CustomOnOff(rawComponent, loxoneRequest, statesEvents);
+                    break;
+                case 'Scene':
+                    component = new scene_1.SceneComponent(rawComponent, loxoneRequest, statesEvents);
+                    break;
             }
             if (component != null) {
                 _this.components[component.id] = component;

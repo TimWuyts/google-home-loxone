@@ -22,11 +22,10 @@ var OpenCloseHandler = /** @class */ (function () {
         }));
     };
     OpenCloseHandler.prototype.handleCommands = function (component, command, payload) {
-        if (payload['openPercent'] === 100) {
-            return component.open();
-        }
-        else {
-            return component.close();
+        switch (payload['openPercent']) {
+            case 100: return component.open();
+            case 0: return component.close();
+            default: return component.position(payload['openPercent']);
         }
     };
     OpenCloseHandler.INSTANCE = new OpenCloseHandler();
